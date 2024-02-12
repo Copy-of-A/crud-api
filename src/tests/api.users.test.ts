@@ -163,4 +163,70 @@ describe("Users endpoints scenarios: ", function () {
       message: `Invalid userId.`,
     });
   });
+
+  it("4. get 400 errors if there are missing fields on PUT api/users/{userId}, POST api/users", async () => {
+    // i. A new object is created by a POST api/users request (a response containing newly created record is expected)
+    const responsePost = await request(server)
+      .post("/api/users")
+      .set("Accept", "application/json")
+      .send(userDto1Fixture);
+
+    expect(responsePost.type).toEqual("application/json");
+    expect(responsePost.status).toEqual(201);
+    expect(responsePost.body).toMatchObject(userDto1Fixture);
+    expect(typeof responsePost.body.id).toBe("string");
+
+    const userId = responsePost.body.id;
+
+    // ii. We try to update the created record with a PUT api/users/{userId} request without username
+    const responsePutWithoutUsername = await request(server)
+      .put(`/api/users/${userId}`)
+      .set("Accept", "application/json")
+      .send({ age: userDto2Fixture.age, hobbies: userDto2Fixture.hobbies });
+
+    expect(responsePutWithoutUsername.type).toEqual("application/json");
+    expect(responsePutWithoutUsername.status).toEqual(400);
+    expect(responsePutWithoutUsername.body).toEqual({
+      message: `Invalid or missing fields.`,
+    });
+
+    // iii. We try to update the created record with a PUT api/users/{userId} request without age
+    const responsePutWithoutAge = await request(server)
+      .put(`/api/users/${userId}`)
+      .set("Accept", "application/json")
+      .send({
+        username: userDto2Fixture.username,
+        hobbies: userDto2Fixture.hobbies,
+      });
+
+    expect(responsePutWithoutAge.type).toEqual("application/json");
+    expect(responsePutWithoutAge.status).toEqual(400);
+    expect(responsePutWithoutAge.body).toEqual({
+      message: "Invalid or missing fields.",
+    });
+
+    // iv. We try to add a new record with a POST api/users request with wrong username
+    const responsePostWrongUsername = await request(server)
+      .post("/api/users")
+      .set("Accept", "application/json")
+      .send({ username: [], age: 30, hobbies: [] });
+
+    expect(responsePostWrongUsername.type).toEqual("application/json");
+    expect(responsePostWrongUsername.status).toEqual(400);
+    expect(responsePostWrongUsername.body).toEqual({
+      message: "Invalid or missing fields.",
+    });
+
+    // iv. We try to add a new record with a POST api/users request with wrong hobbies
+    const responsePostWrongHobbies = await request(server)
+      .post("/api/users")
+      .set("Accept", "application/json")
+      .send({ username: "Alex", age: 30, hobbies: "football" });
+
+    expect(responsePostWrongHobbies.type).toEqual("application/json");
+    expect(responsePostWrongHobbies.status).toEqual(400);
+    expect(responsePostWrongHobbies.body).toEqual({
+      message: "Invalid or missing fields.",
+    });
+  });
 });

@@ -7,9 +7,13 @@ export const isValideUserDto = (userDto: unknown): userDto is CreateUserDto => {
   }
 
   if (
-    !("username" in userDto && userDto.username) ||
-    !("age" in userDto && userDto.age) ||
-    !("hobbies" in userDto && userDto.hobbies)
+    !(
+      "username" in userDto &&
+      userDto.username &&
+      typeof userDto.username === "string"
+    ) ||
+    !("age" in userDto && userDto.age && typeof userDto.age === "number") ||
+    !("hobbies" in userDto && userDto.hobbies && Array.isArray(userDto.hobbies))
   ) {
     return false;
   }
