@@ -14,7 +14,7 @@ export const getById = (id: string) => {
   }
 };
 
-export const post = (userDto: CreateUserDto) => {
+export const create = (userDto: CreateUserDto) => {
   const id = uuidv4();
   const newUser = {
     ...userDto,
@@ -24,7 +24,7 @@ export const post = (userDto: CreateUserDto) => {
   return newUser;
 };
 
-export const put = (id: string, userDto: CreateUserDto) => {
+export const update = (id: string, userDto: CreateUserDto) => {
   if (usersData.hasOwnProperty(id)) {
     usersData[id] = {
       ...userDto,
