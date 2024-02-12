@@ -23,3 +23,15 @@ export const post = (userDto: CreateUserDto) => {
   usersData[id] = newUser;
   return newUser;
 };
+
+export const put = (id: string, userDto: CreateUserDto) => {
+  if (usersData.hasOwnProperty(id)) {
+    usersData[id] = {
+      ...userDto,
+      id,
+    };
+    return usersData[id];
+  } else {
+    return null;
+  }
+};

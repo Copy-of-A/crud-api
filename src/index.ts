@@ -5,7 +5,12 @@ import {
   get404Response,
   get500Response,
 } from "./responseErrors/errors.controller";
-import { addUser, getUserById, getUsers } from "./users/users.controller";
+import {
+  addUser,
+  getUserById,
+  getUsers,
+  updateUser,
+} from "./users/users.controller";
 
 const server = http.createServer((req, res) => {
   try {
@@ -18,6 +23,11 @@ const server = http.createServer((req, res) => {
       getUserById(req, res);
     } else if (req.url === "/api/users" && req.method == "POST") {
       addUser(req, res);
+    } else if (
+      req.url?.match(/\/api\/users\/([0-9a-zA-Z\-]+)/) &&
+      req.method == "PUT"
+    ) {
+      updateUser(req, res);
     } else {
       get404Response(res);
     }
