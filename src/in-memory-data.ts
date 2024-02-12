@@ -1,4 +1,4 @@
-import { UserDataType } from "./types";
+import { UserServerDataType } from "./types";
 import { v4 as uuidv4 } from "uuid";
 
 const idUser1 = uuidv4();
@@ -6,7 +6,7 @@ const idUser2 = uuidv4();
 const idUser3 = uuidv4();
 const idUser4 = uuidv4();
 
-export const usersData: Record<string, UserDataType> = {
+export const usersData: Record<string, UserServerDataType> = {
   [idUser1]: {
     id: idUser1,
     username: "Vasya",

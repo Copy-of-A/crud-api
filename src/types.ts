@@ -5,8 +5,11 @@ export type RouteHandlerType<Response = void> = (
   res: ServerResponse<IncomingMessage>
 ) => Response;
 
-export type UserDataType = {
+export type UserServerDataType = CreateUserDto & {
   id: string;
+};
+
+export type CreateUserDto = {
   username: string;
   age: number;
   hobbies: Array<string>;

@@ -1,9 +1,11 @@
+import { INVALID_MESSAGE } from "../constants";
 import {
   get400Response,
   get404Response,
 } from "../responseErrors/errors.controller";
 import { RouteHandlerType } from "../types";
-import { find, findAll } from "./users.model";
+import { isValideUserDto } from "./helpers";
+import { add, find, findAll } from "./users.model";
 import { validate } from "uuid";
 
 export const getUsers: RouteHandlerType = (req, res) => {
@@ -28,4 +30,29 @@ export const getUserById: RouteHandlerType = (req, res) => {
 
   res.writeHead(200, { "Content-Type": "application/json" });
   res.end(JSON.stringify(user));
+};
+
+export const addUser: RouteHandlerType = (req, res) => {
+  let body: Array<string> = [];
+
+  req.on("data", (chunk) => {
+    body.push(chunk.toString());
+  });
+
+  req.on("end", () => {
+    let userDto;
+    try {
+      userDto = JSON.parse(body.join(""));
+    } catch {
+      return get400Response(res, INVALID_MESSAGE);
+    }
+
+    if (!isValideUserDto(userDto)) {
+      return get400Response(res, INVALID_MESSAGE);
+    } else {
+      const newUser = add(userDto);
+      res.writeHead(201, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(newUser));
+    }
+  });
 };
