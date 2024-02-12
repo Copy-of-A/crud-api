@@ -6,18 +6,26 @@ const idUser2 = uuidv4();
 const idUser3 = uuidv4();
 const idUser4 = uuidv4();
 
-export const usersData: Record<UserIdType, UserDataType> = {
+export const userDto1Fixture = {
+  username: "Vasya",
+  age: 30,
+  hobbies: ["art", "music"],
+};
+
+export const userDto2Fixture = {
+  username: "Petya",
+  age: 15,
+  hobbies: ["games", "anime"],
+};
+
+export const usersDataFixture: Record<UserIdType, UserDataType> = {
   [idUser1]: {
     id: idUser1,
-    username: "Vasya",
-    age: 30,
-    hobbies: ["art", "music"],
+    ...userDto1Fixture,
   },
   [idUser2]: {
     id: idUser2,
-    username: "Petya",
-    age: 15,
-    hobbies: ["games", "anime"],
+    ...userDto2Fixture,
   },
   [idUser3]: {
     id: idUser3,
@@ -27,3 +35,5 @@ export const usersData: Record<UserIdType, UserDataType> = {
   },
   [idUser4]: { id: idUser4, username: "Alina", age: 21, hobbies: [] },
 };
+
+export const usersData: Record<UserIdType, UserDataType> = {};

@@ -15,7 +15,7 @@ import {
   updateUser,
 } from "./users/users.controller";
 
-const server = createServer(async (req, res) => {
+export const server = createServer(async (req, res) => {
   try {
     if (req.url === API_USERS_ROUTE && req.method == Methods.GET) {
       await getUsers(req, res);
