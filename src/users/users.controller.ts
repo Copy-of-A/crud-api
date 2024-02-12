@@ -13,7 +13,7 @@ export const getUsers: RouteHandlerType = (req, res) => {
   res.end(JSON.stringify(data));
 };
 
-export const getUserById: RouteHandlerType = async (req, res) => {
+export const getUserById: RouteHandlerType = (req, res) => {
   const id = req.url?.split("/")[3];
 
   if (!id || !validate(id)) {
