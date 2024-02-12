@@ -1,6 +1,8 @@
 import http from "node:http";
 
-import { PORT } from "./constants";
+import { API_USERS_ID_REGEX, API_USERS_ROUTE } from "./users/constants";
+import { Methods, PORT } from "./constants";
+
 import {
   get404Response,
   get500Response,
@@ -13,27 +15,27 @@ import {
   updateUser,
 } from "./users/users.controller";
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   try {
-    if (req.url === "/api/users" && req.method == "GET") {
-      getUsers(req, res);
+    if (req.url === API_USERS_ROUTE && req.method == Methods.GET) {
+      await getUsers(req, res);
     } else if (
-      req.url?.match(/\/api\/users\/([0-9a-zA-Z\-]+)/) &&
-      req.method == "GET"
+      req.url?.match(API_USERS_ID_REGEX) &&
+      req.method == Methods.GET
     ) {
-      getUserById(req, res);
-    } else if (req.url === "/api/users" && req.method == "POST") {
-      addUser(req, res);
+      await getUserById(req, res);
+    } else if (req.url === API_USERS_ROUTE && req.method == Methods.POST) {
+      await addUser(req, res);
     } else if (
-      req.url?.match(/\/api\/users\/([0-9a-zA-Z\-]+)/) &&
-      req.method == "PUT"
+      req.url?.match(API_USERS_ID_REGEX) &&
+      req.method == Methods.PUT
     ) {
-      updateUser(req, res);
+      await updateUser(req, res);
     } else if (
-      req.url?.match(/\/api\/users\/([0-9a-zA-Z\-]+)/) &&
-      req.method == "DELETE"
+      req.url?.match(API_USERS_ID_REGEX) &&
+      req.method == Methods.DELETE
     ) {
-      deleteUser(req, res);
+      await deleteUser(req, res);
     } else {
       get404Response(res);
     }

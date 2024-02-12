@@ -1,109 +1,90 @@
-import { INVALID_MESSAGE } from "../constants";
+import { CONTENT_TYPE_JSON, INVALID_MESSAGE } from "../constants";
+import { getRequestBodyData } from "../helpers";
 import {
   get400Response,
   get404Response,
 } from "../responseErrors/errors.controller";
 import { RouteHandlerType } from "../types";
-import { isValideUserDto } from "./helpers";
+import {
+  isValideUserDto,
+  isValideId,
+  getIdFromUrl,
+  getUserIdNotFoundMessage,
+  getInvalidUserIdMessage,
+} from "./helpers";
 import { create, getById, getAll, update, remove } from "./users.model";
-import { validate } from "uuid";
 
-export const getUsers: RouteHandlerType = (req, res) => {
+export const getUsers: RouteHandlerType = async (req, res) => {
   const data = getAll();
 
-  res.writeHead(200, { "Content-Type": "application/json" });
+  res.writeHead(200, CONTENT_TYPE_JSON);
   res.end(JSON.stringify(data));
 };
 
 export const getUserById: RouteHandlerType = (req, res) => {
-  const id = req.url?.split("/")[3];
+  const id = getIdFromUrl(req.url);
 
-  if (!id || !validate(id)) {
-    return get400Response(res, "Invalid userId.");
+  if (!isValideId(id)) {
+    return get400Response(res, getInvalidUserIdMessage());
   }
 
   const user = getById(id);
 
   if (user === null) {
-    return get404Response(res, `User with usedId=${id} not found.`);
+    return get404Response(res, getUserIdNotFoundMessage(id));
   }
 
-  res.writeHead(200, { "Content-Type": "application/json" });
+  res.writeHead(200, CONTENT_TYPE_JSON);
   res.end(JSON.stringify(user));
 };
 
-export const addUser: RouteHandlerType = (req, res) => {
-  let body: Array<string> = [];
+export const addUser: RouteHandlerType = async (req, res) => {
+  const userDto = await getRequestBodyData(req);
 
-  req.on("data", (chunk) => {
-    body.push(chunk.toString());
-  });
-
-  req.on("end", () => {
-    let userDto;
-    try {
-      userDto = JSON.parse(body.join(""));
-    } catch {
-      return get400Response(res, INVALID_MESSAGE);
-    }
-
-    if (!isValideUserDto(userDto)) {
-      return get400Response(res, INVALID_MESSAGE);
-    } else {
-      const newUser = create(userDto);
-      res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(newUser));
-    }
-  });
-};
-
-export const updateUser: RouteHandlerType = (req, res) => {
-  const id = req.url?.split("/")[3];
-
-  if (!id || !validate(id)) {
-    return get400Response(res, "Invalid userId.");
+  if (userDto === null || !isValideUserDto(userDto)) {
+    return get400Response(res, INVALID_MESSAGE);
   }
 
-  let body: Array<string> = [];
+  const newUser = create(userDto);
 
-  req.on("data", (chunk) => {
-    body.push(chunk.toString());
-  });
+  res.writeHead(201, CONTENT_TYPE_JSON);
+  res.end(JSON.stringify(newUser));
+};
 
-  req.on("end", () => {
-    let userDto;
-    try {
-      userDto = JSON.parse(body.join(""));
-    } catch {
-      return get400Response(res, INVALID_MESSAGE);
-    }
+export const updateUser: RouteHandlerType = async (req, res) => {
+  const id = getIdFromUrl(req.url);
 
-    if (!isValideUserDto(userDto)) {
-      return get400Response(res, INVALID_MESSAGE);
-    } else {
-      const updatedUser = update(id, userDto);
+  if (!isValideId(id)) {
+    return get400Response(res, getInvalidUserIdMessage());
+  }
 
-      if (updatedUser === null) {
-        return get404Response(res, `User with usedId=${id} not found.`);
-      }
+  const userDto = await getRequestBodyData(req);
 
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(updatedUser));
-    }
-  });
+  if (userDto === null || !isValideUserDto(userDto)) {
+    return get400Response(res, INVALID_MESSAGE);
+  }
+
+  const updatedUser = update(id, userDto);
+
+  if (updatedUser === null) {
+    return get404Response(res, getUserIdNotFoundMessage(id));
+  }
+
+  res.writeHead(200, CONTENT_TYPE_JSON);
+  res.end(JSON.stringify(updatedUser));
 };
 
 export const deleteUser: RouteHandlerType = (req, res) => {
-  const id = req.url?.split("/")[3];
+  const id = getIdFromUrl(req.url);
 
-  if (!id || !validate(id)) {
-    return get400Response(res, "Invalid userId.");
+  if (!isValideId(id)) {
+    return get400Response(res, getInvalidUserIdMessage());
   }
 
   const removed = remove(id);
 
   if (!removed) {
-    return get404Response(res, `User with usedId=${id} not found.`);
+    return get404Response(res, getUserIdNotFoundMessage(id));
   }
 
   res.statusCode = 204;
