@@ -3,7 +3,7 @@ import { CreateUserDto } from "../types";
 import { v4 as uuidv4 } from "uuid";
 
 export const getAll = () => {
-  return usersData;
+  return Object.values(usersData);
 };
 
 export const getById = (id: string) => {
