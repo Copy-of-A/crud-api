@@ -16,8 +16,11 @@ export const getById = (id: UserIdType) => {
 
 export const create = (userDto: CreateUserDto) => {
   const id = uuidv4();
+  const { username, age, hobbies } = userDto;
   const newUser = {
-    ...userDto,
+    username,
+    age,
+    hobbies,
     id,
   };
   usersData[id] = newUser;
@@ -26,8 +29,11 @@ export const create = (userDto: CreateUserDto) => {
 
 export const update = (id: UserIdType, userDto: CreateUserDto) => {
   if (usersData.hasOwnProperty(id)) {
+    const { username, age, hobbies } = userDto;
     usersData[id] = {
-      ...userDto,
+      username,
+      age,
+      hobbies,
       id,
     };
     return usersData[id];
