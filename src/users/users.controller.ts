@@ -5,11 +5,11 @@ import {
 } from "../responseErrors/errors.controller";
 import { RouteHandlerType } from "../types";
 import { isValideUserDto } from "./helpers";
-import { add, find, findAll } from "./users.model";
+import { post, getById, getAll } from "./users.model";
 import { validate } from "uuid";
 
 export const getUsers: RouteHandlerType = (req, res) => {
-  const data = findAll();
+  const data = getAll();
 
   res.writeHead(200, { "Content-Type": "application/json" });
   res.end(JSON.stringify(data));
@@ -22,7 +22,7 @@ export const getUserById: RouteHandlerType = (req, res) => {
     return get400Response(res, "Invalid userId.");
   }
 
-  const user = find(id);
+  const user = getById(id);
 
   if (user === null) {
     return get404Response(res, `User with usedId=${id} not found.`);
@@ -50,7 +50,7 @@ export const addUser: RouteHandlerType = (req, res) => {
     if (!isValideUserDto(userDto)) {
       return get400Response(res, INVALID_MESSAGE);
     } else {
-      const newUser = add(userDto);
+      const newUser = post(userDto);
       res.writeHead(201, { "Content-Type": "application/json" });
       res.end(JSON.stringify(newUser));
     }

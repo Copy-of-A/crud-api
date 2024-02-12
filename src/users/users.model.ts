@@ -2,11 +2,11 @@ import { usersData } from "../in-memory-data";
 import { CreateUserDto } from "../types";
 import { v4 as uuidv4 } from "uuid";
 
-export const findAll = () => {
+export const getAll = () => {
   return usersData;
 };
 
-export const find = (id: string) => {
+export const getById = (id: string) => {
   if (usersData.hasOwnProperty(id)) {
     return usersData[id];
   } else {
@@ -14,7 +14,7 @@ export const find = (id: string) => {
   }
 };
 
-export const add = (userDto: CreateUserDto) => {
+export const post = (userDto: CreateUserDto) => {
   const id = uuidv4();
   const newUser = {
     ...userDto,
