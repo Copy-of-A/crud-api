@@ -5,7 +5,7 @@ import {
 } from "../responseErrors/errors.controller";
 import { RouteHandlerType } from "../types";
 import { isValideUserDto } from "./helpers";
-import { create, getById, getAll, update } from "./users.model";
+import { create, getById, getAll, update, remove } from "./users.model";
 import { validate } from "uuid";
 
 export const getUsers: RouteHandlerType = (req, res) => {
@@ -91,4 +91,21 @@ export const updateUser: RouteHandlerType = (req, res) => {
       res.end(JSON.stringify(updatedUser));
     }
   });
+};
+
+export const deleteUser: RouteHandlerType = (req, res) => {
+  const id = req.url?.split("/")[3];
+
+  if (!id || !validate(id)) {
+    return get400Response(res, "Invalid userId.");
+  }
+
+  const removed = remove(id);
+
+  if (!removed) {
+    return get404Response(res, `User with usedId=${id} not found.`);
+  }
+
+  res.statusCode = 204;
+  res.end();
 };

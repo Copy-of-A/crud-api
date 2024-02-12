@@ -35,3 +35,12 @@ export const update = (id: string, userDto: CreateUserDto) => {
     return null;
   }
 };
+
+export const remove = (id: string) => {
+  if (usersData.hasOwnProperty(id)) {
+    delete usersData[id];
+    return true;
+  } else {
+    return false;
+  }
+};

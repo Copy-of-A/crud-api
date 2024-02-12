@@ -7,6 +7,7 @@ import {
 } from "./responseErrors/errors.controller";
 import {
   addUser,
+  deleteUser,
   getUserById,
   getUsers,
   updateUser,
@@ -28,6 +29,11 @@ const server = http.createServer((req, res) => {
       req.method == "PUT"
     ) {
       updateUser(req, res);
+    } else if (
+      req.url?.match(/\/api\/users\/([0-9a-zA-Z\-]+)/) &&
+      req.method == "DELETE"
+    ) {
+      deleteUser(req, res);
     } else {
       get404Response(res);
     }
