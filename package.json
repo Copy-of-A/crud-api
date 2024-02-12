@@ -1,0 +1,23 @@
+{
+  "name": "crud-api",
+  "version": "1.0.0",
+  "description": "Assignment for the task is [here](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/crud-api/assignment.md)",
+  "main": "src/index.ts",
+  "scripts": {
+    "start:dev": "ts-node-dev src/index.ts",
+    "start:prod": "ts-node  src/index.ts"
+  },
+  "author": "Alla Manshina",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "@types/uuid": "^9.0.8",
+    "dotenv": "^16.4.2",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "uuid": "^9.0.1"
+  }
+}
