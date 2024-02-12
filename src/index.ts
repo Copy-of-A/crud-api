@@ -1,4 +1,4 @@
-import http from "node:http";
+import { createServer } from "node:http";
 
 import { API_USERS_ID_REGEX, API_USERS_ROUTE } from "./users/constants";
 import { Methods, PORT } from "./constants";
@@ -15,7 +15,7 @@ import {
   updateUser,
 } from "./users/users.controller";
 
-const server = http.createServer(async (req, res) => {
+const server = createServer(async (req, res) => {
   try {
     if (req.url === API_USERS_ROUTE && req.method == Methods.GET) {
       await getUsers(req, res);

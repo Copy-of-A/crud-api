@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Assignment for the task is [here](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/crud-api/assignment.md)",
   "main": "src/index.ts",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "start:dev": "ts-node-dev src/index.ts",
     "start:prod": "ts-node src/index.ts"
